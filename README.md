@@ -1,4 +1,4 @@
-# agentlens
+# Agentlens
 
 Evaluate multi step AI agent traces, not just single LLM responses.
 
