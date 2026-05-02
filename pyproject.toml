@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "agentlens"
+version = "0.1.0"
+description = "Evaluate multi step AI agent traces, not just single LLM responses."
+authors = ["Mohd Talib <mohd.talib@growthengineering.co.uk>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "agentlens" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.6"
+typer = ">=0.12"
+pyyaml = "^6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+
+[tool.poetry.scripts]
+agentlens = "agentlens.cli:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
