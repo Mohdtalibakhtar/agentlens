@@ -1,2 +1,4 @@
 evaluators:
   - tool_accuracy
+  - step_efficiency
+  - failure_modes

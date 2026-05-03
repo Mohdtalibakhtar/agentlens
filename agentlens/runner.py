@@ -10,6 +10,8 @@ import yaml
 from pydantic import BaseModel
 
 from agentlens.evaluators.base import Evaluator, EvaluatorResult
+from agentlens.evaluators.failure_modes import FailureModesEvaluator
+from agentlens.evaluators.step_efficiency import StepEfficiencyEvaluator
 from agentlens.evaluators.tool_accuracy import ToolAccuracyEvaluator
 from agentlens.schema import Trace
 
@@ -18,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 EVALUATOR_REGISTRY: dict[str, type[Evaluator]] = {
     "tool_accuracy": ToolAccuracyEvaluator,
+    "step_efficiency": StepEfficiencyEvaluator,
+    "failure_modes": FailureModesEvaluator,
 }
 
 

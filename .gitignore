@@ -11,3 +11,4 @@ poetry.lock
 
 # Local project brief, not for the public repo
 agent_evals_project_brief.md
+PROJECT.md

@@ -34,9 +34,9 @@ The CLI exits with code 1 if any trace fails, so you can drop it into CI.
 | Evaluator | What it checks | Status |
 |---|---|---|
 | `tool_accuracy` | Did the agent call the right tools in the right order? | Built |
-| `step_efficiency` | Steps taken vs minimum needed; flags loops | Coming |
+| `step_efficiency` | Tool calls vs expected; flags consecutive duplicate calls and retries | Built |
+| `failure_modes` | Tags traces with known failure shapes (loops, context overflow, tool errors) | Built |
 | `context_drift` | Does the agent stay on topic across steps? (LLM as judge) | Coming |
-| `failure_modes` | Categorises errors (loops, context overflow, hallucinated args) | Coming |
 | `output_quality` | Final reply scored against a rubric (LLM as judge) | Coming |
 
 ## Trace format
@@ -69,8 +69,8 @@ A `.jsonl` file is one trace per line. A `.json` file may be a single trace or a
 
 - [x] Trace ingestion (JSON, JSONL)
 - [x] Tool call accuracy evaluator
-- [ ] Step efficiency evaluator
-- [ ] Failure mode detection
+- [x] Step efficiency evaluator
+- [x] Failure mode detection
 - [ ] Context drift evaluator
 - [ ] Output quality evaluator
 - [ ] OpenTelemetry span ingest
