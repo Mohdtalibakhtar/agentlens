@@ -18,7 +18,12 @@ def to_text(reports: list[TraceReport]) -> str:
     for report in reports:
         lines.append(f"Trace: {report.trace_id} ({report.agent_name})")
         for r in report.results:
-            mark = "PASS" if r.passed else "FAIL"
+            if r.metadata.get("skipped"):
+                mark = "SKIP"
+            elif r.passed:
+                mark = "PASS"
+            else:
+                mark = "FAIL"
             lines.append(f"  [{mark}] {r.evaluator}: {r.details}")
         lines.append(f"  -> {'PASS' if report.passed else 'FAIL'}")
         lines.append("")

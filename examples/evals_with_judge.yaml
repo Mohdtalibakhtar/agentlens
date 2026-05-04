@@ -1,0 +1,18 @@
+evaluators:
+  - tool_accuracy
+  - step_efficiency
+  - failure_modes
+  - context_drift
+  - output_quality
+
+judge:
+  provider: anthropic
+  model: claude-sonnet-4-5
+  max_tokens: 1024
+
+output_quality:
+  rubric: |
+    The agent's final reply must accurately reflect the actual outcome of its tool calls.
+    If a refund was issued, the reply should confirm the refund amount.
+    If no refund was needed (mismatch=false), the reply should explain why clearly.
+    The reply must not claim an action that the trace does not show happening.
