@@ -15,9 +15,15 @@ pip install agentlens[llm]    # adds the LLM-as-judge extras (anthropic SDK)
 agentlens run \
   --traces examples/sample_traces.jsonl \
   --config examples/evals.yaml
+
+# write a self-contained HTML report you can open in a browser
+agentlens run \
+  --traces examples/sample_traces.jsonl \
+  --config examples/evals.yaml \
+  --output html --out report.html
 ```
 
-Sample output:
+Sample text output:
 
 ```
 Trace: support_001_pass (support_agent)
@@ -128,6 +134,7 @@ A `.jsonl` file is one trace per line. A `.json` file may be a single trace or a
 - [x] Failure mode detection
 - [x] Context drift evaluator
 - [x] Output quality evaluator
+- [x] Static HTML report (`--output html`)
 - [ ] OpenTelemetry span ingest
 - [ ] Pydantic AI native integration
 - [ ] LangGraph trace adapter

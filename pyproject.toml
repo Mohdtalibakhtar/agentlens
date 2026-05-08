@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentlens"
-version = "0.2.0"
+version = "0.3.0"
 description = "Evaluate multi step AI agent traces, not just single LLM responses."
 authors = ["Mohd Talib <mohd.talib@growthengineering.co.uk>"]
 license = "MIT"
