@@ -157,6 +157,24 @@ The bolded cells are the evaluators that *only* detect that failure shape. A sin
 > **context_drift** — *and you stayed on topic*
 > **output_quality** — *and your final answer was actually good*
 
+## How tracecheck compares to existing eval tools
+
+There are excellent eval tools already. tracecheck does not replace them; it fills a different slot.
+
+| Tool | Unit of evaluation | LLM key needed? | Form factor | Best for |
+|---|---|---|---|---|
+| **tracecheck** | Full agent trace (multi step) | Optional — 3 of 5 evaluators are deterministic | Library + CLI, drops into CI | Multi-step agent regression testing |
+| Ragas | RAG retrieval + answer | Yes (LLM-judge metrics) | Library | RAG-specific metrics (faithfulness, context precision, etc.) |
+| DeepEval | Single test case | Yes for most metrics | pytest-style framework | Single-turn LLM unit testing |
+| TruLens | App + feedback functions | Yes | Framework + observability layer | Observability with feedback evaluation |
+| Promptfoo | Prompt + provider matrix | Configurable | YAML test runner | Prompt regression across providers |
+
+The shape that makes tracecheck useful when the others fall short:
+
+- **Trace as the unit, not a single output.** If your agent loops three times, calls a wrong tool, and *then* produces a plausible reply, the existing tools score the reply. tracecheck scores the path.
+- **Deterministic by default.** `tool_accuracy`, `step_efficiency`, and `failure_modes` need zero LLM calls. You can run hundreds of traces in CI with no API key, no rate limits, no cost. The LLM-as-judge evaluators are opt-in for finer grained checks.
+- **CI-native exit codes.** No dashboard, no service. `exit 1` blocks the merge. Same form factor as `pytest`, `ruff`, `mypy`.
+
 ## LLM-as-judge configuration
 
 The two judge-based evaluators (`context_drift`, `output_quality`) need a backend. Configure it in your YAML:
