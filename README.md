@@ -61,6 +61,67 @@ print(to_text(reports))
 
 The CLI exits with code 1 if any trace fails, so you can drop it into CI.
 
+## Integrating tracecheck into your agent
+
+The trace data has to come from *your* agent. tracecheck reads traces; it does not produce them. Three steps to wire it in.
+
+### 1. Log each step from inside your agent
+
+Around each tool call and LLM call, append a step record. About ten lines of code total.
+
+```python
+import json, uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+steps = []
+
+def log(step_type, **kwargs):
+    steps.append({
+        "type": step_type,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        **kwargs,
+    })
+
+# inside your handler:
+hits = semantic_search(query)
+log("tool_call", name="semantic_search", input={"q": query}, output={"n_hits": len(hits)})
+
+reply = llm.generate(query, hits)
+log("llm_call", output=reply)
+
+# at end of each request, append one trace line:
+Path("traces.jsonl").open("a").write(json.dumps({
+    "trace_id": str(uuid.uuid4()),
+    "agent_name": "my_agent",
+    "user_input": query,
+    "steps": steps,
+}) + "\n")
+```
+
+If you already use a framework with built-in tracing (LangChain callbacks, Pydantic AI events, OpenTelemetry, Logfire, etc.) you can adapt their output to this schema instead of writing logging from scratch.
+
+### 2. Author a golden test set
+
+One JSON line per scenario you care about, listing the user input and the tools you expect the agent to call, in order. This is your assertion file — same role as `assert result == expected` in pytest. tracecheck has no opinion on what your agent should do; you tell it.
+
+```jsonl
+{"trace_id":"refund_ok",       "agent_name":"my_agent", "user_input":"Refund my order",   "expected_tools":["get_order","verify","issue_refund"]}
+{"trace_id":"already_shipped", "agent_name":"my_agent", "user_input":"Cancel order o_99", "expected_tools":["get_order","check_shipping"]}
+```
+
+### 3. Replay the golden inputs through your agent, then run tracecheck
+
+A short driver script feeds each `user_input` through your real agent (with the logger turned on) so the agent appends actual steps to `traces.jsonl`. Merge the `expected_tools` from your golden set onto the captured traces.
+
+Then:
+
+```bash
+tracecheck run --traces traces.jsonl --config evals.yaml
+```
+
+Drop that command into a GitHub Actions step on every PR. Exit code 1 blocks the merge if any trace regresses.
+
 ## Evaluators
 
 | Evaluator | What it checks | Status |
@@ -170,6 +231,15 @@ See [examples/](examples/):
 - [sample_traces.jsonl](examples/sample_traces.jsonl) — three traces (pass, fail, edge case)
 - [evals.yaml](examples/evals.yaml) — minimal deterministic config (no LLM key needed)
 - [evals_with_judge.yaml](examples/evals_with_judge.yaml) — full config with the LLM-as-judge evaluators enabled
+
+For the fastest possible end-to-end demo, clone the repo and run the example traces straight away:
+
+```bash
+pip install tracecheck
+git clone https://github.com/Mohdtalibakhtar/tracecheck && cd tracecheck/examples
+tracecheck run --traces sample_traces.jsonl --config evals.yaml --output html --out report.html
+open report.html
+```
 
 ## Architecture
 
