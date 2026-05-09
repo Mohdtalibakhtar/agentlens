@@ -73,6 +73,29 @@ The CLI exits with code 1 if any trace fails, so you can drop it into CI.
 
 `output_quality` is **deferred**: the runner only invokes the judge after every other evaluator on the same trace passes. Already-broken traces do not burn judge tokens, and the report renders `[SKIP]` for them.
 
+### What each evaluator uniquely catches
+
+Stacking the five evaluators gives pinpoint diagnostics, because each catches a different *kind* of failure. Imagine an agent expected to call tools `[A, B, C]`:
+
+| Trace shape | `tool_accuracy` | `step_efficiency` | `failure_modes` | `context_drift` | `output_quality` |
+|---|---|---|---|---|---|
+| `[A, B, C]` — perfect | PASS | PASS | PASS | PASS | PASS |
+| `[A, A, A, B]` — looped on A | FAIL | FAIL | FAIL `infinite_loop` | PASS | SKIP |
+| `[A, B, A, B, A, B]` — non-adjacent oscillation | FAIL | soft pass | **FAIL `infinite_loop`** | PASS | SKIP |
+| `[A, B, search_unrelated, C]` — drifted off-topic | FAIL | FAIL | PASS | **FAIL** | SKIP |
+| `[A, B, C]` + reply *"refunded $500"* but no refund tool ran | PASS | PASS | PASS | PASS | **FAIL** |
+| `[A, B]` + step `error: "context window exceeded"` | PASS | PASS | **FAIL `context_overflow`** | PASS | SKIP |
+
+The bolded cells are the evaluators that *only* detect that failure shape. A single evaluator alone would silently let those rows through.
+
+### Quick mental shortcut
+
+> **tool_accuracy** — *did you call the right things*
+> **step_efficiency** — *without thrashing*
+> **failure_modes** — *and if you broke, was it a known break*
+> **context_drift** — *and you stayed on topic*
+> **output_quality** — *and your final answer was actually good*
+
 ## LLM-as-judge configuration
 
 The two judge-based evaluators (`context_drift`, `output_quality`) need a backend. Configure it in your YAML:
