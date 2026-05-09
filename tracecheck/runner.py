@@ -9,14 +9,14 @@ from typing import Any
 import yaml
 from pydantic import BaseModel
 
-from agentlens.evaluators.base import Evaluator, EvaluatorResult
-from agentlens.evaluators.context_drift import ContextDriftEvaluator
-from agentlens.evaluators.failure_modes import FailureModesEvaluator
-from agentlens.evaluators.output_quality import OutputQualityEvaluator
-from agentlens.evaluators.step_efficiency import StepEfficiencyEvaluator
-from agentlens.evaluators.tool_accuracy import ToolAccuracyEvaluator
-from agentlens.judges.base import Judge
-from agentlens.schema import Trace
+from tracecheck.evaluators.base import Evaluator, EvaluatorResult
+from tracecheck.evaluators.context_drift import ContextDriftEvaluator
+from tracecheck.evaluators.failure_modes import FailureModesEvaluator
+from tracecheck.evaluators.output_quality import OutputQualityEvaluator
+from tracecheck.evaluators.step_efficiency import StepEfficiencyEvaluator
+from tracecheck.evaluators.tool_accuracy import ToolAccuracyEvaluator
+from tracecheck.judges.base import Judge
+from tracecheck.schema import Trace
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ def build_judge(judge_config: dict[str, Any]) -> Judge:
     """
     provider = judge_config.get("provider", "anthropic")
     if provider == "anthropic":
-        from agentlens.judges.anthropic import AnthropicJudge
+        from tracecheck.judges.anthropic import AnthropicJudge
 
         kwargs: dict[str, Any] = {}
         if "model" in judge_config:
@@ -93,7 +93,7 @@ def build_judge(judge_config: dict[str, Any]) -> Judge:
             kwargs["max_tokens"] = judge_config["max_tokens"]
         return AnthropicJudge(**kwargs)
     if provider == "fake":
-        from agentlens.judges.fake import FakeJudge
+        from tracecheck.judges.fake import FakeJudge
 
         if "response" in judge_config:
             return FakeJudge(response=judge_config["response"])

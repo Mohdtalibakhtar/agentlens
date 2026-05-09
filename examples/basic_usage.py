@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from agentlens import load_traces, run_evals
-from agentlens.report import to_text
+from tracecheck import load_traces, run_evals
+from tracecheck.report import to_text
 
 EXAMPLES_DIR = Path(__file__).parent
 

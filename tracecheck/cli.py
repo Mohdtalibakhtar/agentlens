@@ -1,4 +1,4 @@
-"""Typer based CLI: ``agentlens run --traces ... --config ...``."""
+"""Typer based CLI: ``tracecheck run --traces ... --config ...``."""
 
 from __future__ import annotations
 
@@ -7,10 +7,10 @@ from pathlib import Path
 
 import typer
 
-from agentlens.ingest.json import load_traces
-from agentlens.report import to_json, to_text
-from agentlens.report_html import to_html
-from agentlens.runner import run_evals
+from tracecheck.ingest.json import load_traces
+from tracecheck.report import to_json, to_text
+from tracecheck.report_html import to_html
+from tracecheck.runner import run_evals
 
 app = typer.Typer(help="Evaluate multi step AI agent traces.")
 logger = logging.getLogger(__name__)

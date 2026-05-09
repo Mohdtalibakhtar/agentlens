@@ -20,8 +20,8 @@ import json
 import logging
 from enum import Enum
 
-from agentlens.evaluators.base import Evaluator, EvaluatorResult
-from agentlens.schema import StepType, Trace
+from tracecheck.evaluators.base import Evaluator, EvaluatorResult
+from tracecheck.schema import StepType, Trace
 
 logger = logging.getLogger(__name__)
 

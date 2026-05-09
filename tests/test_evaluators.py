@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from agentlens.evaluators.tool_accuracy import ToolAccuracyEvaluator
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.evaluators.tool_accuracy import ToolAccuracyEvaluator
+from tracecheck.schema import Step, StepType, Trace
 
 
 def _trace(expected: list[str] | None, tool_names: list[str]) -> Trace:

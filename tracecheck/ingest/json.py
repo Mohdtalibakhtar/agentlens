@@ -6,7 +6,7 @@ import json
 import logging
 from pathlib import Path
 
-from agentlens.schema import Trace
+from tracecheck.schema import Trace
 
 logger = logging.getLogger(__name__)
 

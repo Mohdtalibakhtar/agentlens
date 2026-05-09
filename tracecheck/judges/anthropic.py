@@ -32,7 +32,7 @@ class AnthropicJudge:
         except ImportError as exc:
             raise ImportError(
                 "AnthropicJudge requires the anthropic package. "
-                "Install with: pip install agentlens[anthropic]"
+                "Install with: pip install tracecheck[anthropic]"
             ) from exc
 
         self._client = Anthropic(api_key=api_key) if api_key else Anthropic()

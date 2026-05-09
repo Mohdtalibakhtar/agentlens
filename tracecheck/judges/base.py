@@ -9,8 +9,8 @@ from typing import Protocol, runtime_checkable
 class Judge(Protocol):
     """A pluggable LLM-as-judge backend.
 
-    Implementations: :class:`agentlens.judges.fake.FakeJudge` for tests,
-    :class:`agentlens.judges.anthropic.AnthropicJudge` for production.
+    Implementations: :class:`tracecheck.judges.fake.FakeJudge` for tests,
+    :class:`tracecheck.judges.anthropic.AnthropicJudge` for production.
     """
 
     name: str

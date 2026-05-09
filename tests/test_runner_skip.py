@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from agentlens.runner import _evaluate_trace
-from agentlens.evaluators.base import Evaluator, EvaluatorResult
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.runner import _evaluate_trace
+from tracecheck.evaluators.base import Evaluator, EvaluatorResult
+from tracecheck.schema import Step, StepType, Trace
 
 
 class _AlwaysPass(Evaluator):

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from agentlens.runner import TraceReport
+from tracecheck.runner import TraceReport
 
 
 def to_json(reports: list[TraceReport]) -> str:

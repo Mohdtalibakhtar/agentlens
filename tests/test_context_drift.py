@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from agentlens.evaluators.context_drift import ContextDriftEvaluator
-from agentlens.judges.fake import FakeJudge
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.evaluators.context_drift import ContextDriftEvaluator
+from tracecheck.judges.fake import FakeJudge
+from tracecheck.schema import Step, StepType, Trace
 
 
 def _trace_with_input(user_input: str = "test query") -> Trace:

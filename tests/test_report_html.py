@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from agentlens.evaluators.base import EvaluatorResult
-from agentlens.report_html import to_html
-from agentlens.runner import TraceReport
+from tracecheck.evaluators.base import EvaluatorResult
+from tracecheck.report_html import to_html
+from tracecheck.runner import TraceReport
 
 
 def _result(name: str, passed: bool, *, skipped: bool = False, score: float = 1.0, details: str = "ok") -> EvaluatorResult:

@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import logging
 
-from agentlens.evaluators.base import Evaluator, EvaluatorResult
-from agentlens.schema import Trace
+from tracecheck.evaluators.base import Evaluator, EvaluatorResult
+from tracecheck.schema import Trace
 
 logger = logging.getLogger(__name__)
 

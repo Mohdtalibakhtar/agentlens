@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "agentlens"
-version = "0.3.0"
+name = "tracecheck"
+version = "0.4.0"
 description = "Evaluate multi step AI agent traces, not just single LLM responses."
 authors = ["Mohd Talib <mohd.talib@growthengineering.co.uk>"]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "agentlens" }]
+packages = [{ include = "tracecheck" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -22,7 +22,7 @@ llm = ["anthropic"]
 pytest = "^8.0"
 
 [tool.poetry.scripts]
-agentlens = "agentlens.cli:app"
+tracecheck = "tracecheck.cli:app"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,23 +1,23 @@
-# Agentlens
+# Tracecheck
 
 Evaluate multi step AI agent traces, not just single LLM responses.
 
 ## Why
 
-Most eval tools score one input/output pair at a time. Production agents take 7 tool calls, retry, hit context limits, and *then* produce an answer. The trace is the unit you actually need to evaluate. agentlens ingests full agent traces and scores them on tool accuracy, context handling, step efficiency, failure modes, and final output quality.
+Most eval tools score one input/output pair at a time. Production agents take 7 tool calls, retry, hit context limits, and *then* produce an answer. The trace is the unit you actually need to evaluate. tracecheck ingests full agent traces and scores them on tool accuracy, context handling, step efficiency, failure modes, and final output quality.
 
 ## Quick start
 
 ```bash
-pip install agentlens         # core, deterministic evaluators only
-pip install agentlens[llm]    # adds the LLM-as-judge extras (anthropic SDK)
+pip install tracecheck         # core, deterministic evaluators only
+pip install tracecheck[llm]    # adds the LLM-as-judge extras (anthropic SDK)
 
-agentlens run \
+tracecheck run \
   --traces examples/sample_traces.jsonl \
   --config examples/evals.yaml
 
 # write a self-contained HTML report you can open in a browser
-agentlens run \
+tracecheck run \
   --traces examples/sample_traces.jsonl \
   --config examples/evals.yaml \
   --output html --out report.html
@@ -51,8 +51,8 @@ exit code: 1
 Or programmatically:
 
 ```python
-from agentlens import load_traces, run_evals
-from agentlens.report import to_text
+from tracecheck import load_traces, run_evals
+from tracecheck.report import to_text
 
 traces = load_traces("traces.jsonl")
 reports = run_evals(traces, "evals.yaml")
@@ -98,7 +98,7 @@ output_quality:
 
 Rubric resolution is per-trace first, then YAML default — set `trace.metadata.rubric` to override per scenario.
 
-The `AnthropicJudge` enables prompt caching on the system block, so judging N traces costs roughly `1 + 0.1 * (N − 1)` system-prompt tokens. See [agentlens/judges/](agentlens/judges/) for the protocol and the `FakeJudge` used in tests.
+The `AnthropicJudge` enables prompt caching on the system block, so judging N traces costs roughly `1 + 0.1 * (N − 1)` system-prompt tokens. See [tracecheck/judges/](tracecheck/judges/) for the protocol and the `FakeJudge` used in tests.
 
 ## Trace format
 
@@ -122,7 +122,7 @@ A trace is a JSON object with an ordered list of steps:
 }
 ```
 
-Step types: `llm_call`, `tool_call`, `retry`, `error`. Each step may carry `latency_ms`, `tokens`, `timestamp`, and an `error` message. See [agentlens/schema.py](agentlens/schema.py) for the full Pydantic spec.
+Step types: `llm_call`, `tool_call`, `retry`, `error`. Each step may carry `latency_ms`, `tokens`, `timestamp`, and an `error` message. See [tracecheck/schema.py](tracecheck/schema.py) for the full Pydantic spec.
 
 A `.jsonl` file is one trace per line. A `.json` file may be a single trace or an array.
 

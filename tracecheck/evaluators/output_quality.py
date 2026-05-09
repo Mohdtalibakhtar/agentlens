@@ -21,9 +21,9 @@ import logging
 import re
 from typing import Any
 
-from agentlens.evaluators.base import Evaluator, EvaluatorResult
-from agentlens.judges.base import Judge
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.evaluators.base import Evaluator, EvaluatorResult
+from tracecheck.judges.base import Judge
+from tracecheck.schema import Step, StepType, Trace
 
 logger = logging.getLogger(__name__)
 

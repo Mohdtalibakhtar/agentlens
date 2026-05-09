@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from agentlens.evaluators.output_quality import OutputQualityEvaluator
-from agentlens.judges.fake import FakeJudge
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.evaluators.output_quality import OutputQualityEvaluator
+from tracecheck.judges.fake import FakeJudge
+from tracecheck.schema import Step, StepType, Trace
 
 
 def _trace(

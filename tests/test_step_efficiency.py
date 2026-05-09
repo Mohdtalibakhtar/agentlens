@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from agentlens.evaluators.step_efficiency import StepEfficiencyEvaluator
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.evaluators.step_efficiency import StepEfficiencyEvaluator
+from tracecheck.schema import Step, StepType, Trace
 
 
 def _tool(name: str, inp: dict | None = None) -> Step:

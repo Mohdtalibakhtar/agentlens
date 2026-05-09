@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, Field
 
-from agentlens.schema import Trace
+from tracecheck.schema import Trace
 
 if TYPE_CHECKING:
-    from agentlens.judges.base import Judge
+    from tracecheck.judges.base import Judge
 
 
 class EvaluatorResult(BaseModel):

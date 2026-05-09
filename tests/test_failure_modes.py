@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from agentlens.evaluators.failure_modes import FailureModesEvaluator
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.evaluators.failure_modes import FailureModesEvaluator
+from tracecheck.schema import Step, StepType, Trace
 
 
 def _trace(steps: list[Step]) -> Trace:

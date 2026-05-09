@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from agentlens.schema import Step, StepType, Trace
+from tracecheck.schema import Step, StepType, Trace
 
 
 def test_minimal_trace_validates() -> None:

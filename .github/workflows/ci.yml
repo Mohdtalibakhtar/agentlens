@@ -27,7 +27,7 @@ jobs:
       - name: Smoke test CLI on sample traces
         run: |
           set +e
-          poetry run agentlens run \
+          poetry run tracecheck run \
             --traces examples/sample_traces.jsonl \
             --config examples/evals.yaml
           test $? -eq 1

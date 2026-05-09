@@ -15,11 +15,11 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
-from agentlens.evaluators.base import EvaluatorResult
-from agentlens.runner import TraceReport
+from tracecheck.evaluators.base import EvaluatorResult
+from tracecheck.runner import TraceReport
 
 
-def to_html(reports: list[TraceReport], title: str = "agentlens report") -> str:
+def to_html(reports: list[TraceReport], title: str = "tracecheck report") -> str:
     """Render a self-contained HTML document for the given reports."""
     total = len(reports)
     passed = sum(1 for r in reports if r.passed)
@@ -40,7 +40,7 @@ def _render_summary(total: int, passed: int, failed: int, when: str) -> str:
     pct = (100 * passed / total) if total else 0
     return f"""
     <header class="summary">
-      <h1>agentlens report</h1>
+      <h1>tracecheck report</h1>
       <div class="meta">{when} · {total} traces · {passed} passed · {failed} failed · {pct:.0f}%</div>
     </header>
     """

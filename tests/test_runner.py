@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from agentlens.ingest.json import load_traces
-from agentlens.runner import run_evals
+from tracecheck.ingest.json import load_traces
+from tracecheck.runner import run_evals
 
 EXAMPLES = Path(__file__).resolve().parent.parent / "examples"
 

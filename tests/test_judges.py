@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from agentlens.judges.fake import FakeJudge
+from tracecheck.judges.fake import FakeJudge
 
 
 def test_fake_judge_returns_static_response() -> None:
