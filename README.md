@@ -228,6 +228,37 @@ Step types: `llm_call`, `tool_call`, `retry`, `error`. Each step may carry `late
 
 A `.jsonl` file is one trace per line. A `.json` file may be a single trace or an array.
 
+## OpenTelemetry ingestion
+
+If your agent already emits OpenTelemetry spans (LangChain callbacks, OpenAI/Anthropic instrumentation, Pydantic Logfire, OpenInference, etc.), point tracecheck at the OTLP/JSON span export directly — no hand-rolled logger required:
+
+```bash
+tracecheck run --traces my_otel_spans.json --config evals.yaml
+```
+
+The loader auto-detects OTLP/JSON (any file with a top-level `resourceSpans` key) and maps the [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) onto the trace schema:
+
+| OTel attribute | Maps to |
+|---|---|
+| `gen_ai.tool.name` | `Step.name` on a `tool_call` step |
+| `gen_ai.request.model` / `gen_ai.system` | `Step.name` on an `llm_call` step |
+| `gen_ai.usage.input_tokens` (or `prompt_tokens`) | `Step.tokens.prompt` |
+| `gen_ai.usage.output_tokens` (or `completion_tokens`) | `Step.tokens.completion` |
+| `span.startTimeUnixNano` | `Step.timestamp` |
+| `endTime − startTime` | `Step.latency_ms` |
+| `span.status.code = ERROR` | `Step` flagged with the error message |
+| `resource.service.name` | `Trace.agent_name` |
+
+Spans are grouped by `traceId` and ordered by start time. Spans that don't match a recognised pattern are dropped quietly.
+
+```python
+from tracecheck import load_otel_traces
+
+traces = load_otel_traces("spans.json")
+```
+
+**One caveat:** OTel-ingested traces have no `expected_tools` — OTel does not carry your test assertions. To run `tool_accuracy` on them you write a small golden test set and merge `expected_tools` in. The LLM-as-judge evaluators (`context_drift`, `output_quality`) work fine without it.
+
 ## Roadmap
 
 - [x] Trace ingestion (JSON, JSONL)
@@ -237,10 +268,10 @@ A `.jsonl` file is one trace per line. A `.json` file may be a single trace or a
 - [x] Context drift evaluator
 - [x] Output quality evaluator
 - [x] Static HTML report (`--output html`)
-- [ ] OpenTelemetry span ingest
+- [x] OpenTelemetry span ingest
+- [x] PyPI release
 - [ ] Pydantic AI native integration
 - [ ] LangGraph trace adapter
-- [ ] PyPI release
 
 ## Examples
 
