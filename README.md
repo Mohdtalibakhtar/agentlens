@@ -291,6 +291,38 @@ What the adapter does:
 
 The adapter is **duck-typed**: tracecheck does not import `pydantic_ai`, so installing tracecheck adds zero new dependencies to your project. You install Pydantic AI; you hand us the result.
 
+## LangChain / LangGraph integration
+
+If your agent is built with LangGraph (or any LangChain runnable), collect the events emitted by `graph.astream_events(...)` and hand them to the adapter:
+
+```python
+from tracecheck import langgraph_events_to_trace, run_evals
+
+events = []
+async for ev in graph.astream_events({"input": "Refund my order"}, version="v2"):
+    events.append(ev)
+
+trace = langgraph_events_to_trace(
+    events,
+    trace_id="refund_happy_path",
+    agent_name="support_agent",
+    expected_tools=["get_order", "verify", "issue_refund"],
+)
+
+reports = run_evals([trace], "evals.yaml")
+```
+
+What the adapter does:
+
+- Pairs every `on_*_start` event with its matching `on_*_end` (or `on_*_error`) by `run_id`
+- Emits one `tool_call` step per `on_tool_start` (input from call args, output from the return)
+- Emits one `llm_call` step per `on_chat_model_start` / `on_llm_start` (model name from `metadata.ls_model_name`)
+- Tool errors and chat-model errors become `error` steps
+- Drops unrelated event types (chain, retriever, parser, etc.) so the trace stays focused on the agent's decisions
+- Tries to extract `user_input` from the first chat call's human message
+
+Duck-typed: tracecheck does not import `langchain` or `langgraph`. Same zero-dependency story as the Pydantic AI adapter.
+
 ## Roadmap
 
 - [x] Trace ingestion (JSON, JSONL)
@@ -303,7 +335,7 @@ The adapter is **duck-typed**: tracecheck does not import `pydantic_ai`, so inst
 - [x] OpenTelemetry span ingest
 - [x] PyPI release
 - [x] Pydantic AI native integration
-- [ ] LangGraph trace adapter
+- [x] LangGraph / LangChain adapter
 
 ## Examples
 
