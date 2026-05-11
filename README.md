@@ -259,6 +259,38 @@ traces = load_otel_traces("spans.json")
 
 **One caveat:** OTel-ingested traces have no `expected_tools` — OTel does not carry your test assertions. To run `tool_accuracy` on them you write a small golden test set and merge `expected_tools` in. The LLM-as-judge evaluators (`context_drift`, `output_quality`) work fine without it.
 
+## Pydantic AI integration
+
+If you build with [Pydantic AI](https://ai.pydantic.dev/), the adapter turns an `AgentRunResult` directly into a tracecheck `Trace` — no hand-rolled logger, no OTel exporter, just one function call after each run:
+
+```python
+from pydantic_ai import Agent
+from tracecheck import pydantic_ai_to_trace, run_evals
+
+agent = Agent("anthropic:claude-sonnet-4-5", tools=[get_order, verify, issue_refund])
+
+result = await agent.run("Refund my order")
+
+trace = pydantic_ai_to_trace(
+    result,
+    trace_id="refund_happy_path",
+    agent_name="support_agent",
+    expected_tools=["get_order", "verify", "issue_refund"],
+)
+
+reports = run_evals([trace], "evals.yaml")
+```
+
+What the adapter does:
+
+- Walks the `result.all_messages()` list in chronological order
+- Emits one `llm_call` step per `TextPart`
+- Merges each `ToolCallPart` with its matching `ToolReturnPart` (linked by `tool_call_id`) into a single `tool_call` step — `input` from the call args, `output` from the return content
+- `RetryPromptPart` becomes a `retry` step so `step_efficiency` and `failure_modes` can score it
+- Pulls `user_input` from the first `UserPromptPart`
+
+The adapter is **duck-typed**: tracecheck does not import `pydantic_ai`, so installing tracecheck adds zero new dependencies to your project. You install Pydantic AI; you hand us the result.
+
 ## Roadmap
 
 - [x] Trace ingestion (JSON, JSONL)
@@ -270,7 +302,7 @@ traces = load_otel_traces("spans.json")
 - [x] Static HTML report (`--output html`)
 - [x] OpenTelemetry span ingest
 - [x] PyPI release
-- [ ] Pydantic AI native integration
+- [x] Pydantic AI native integration
 - [ ] LangGraph trace adapter
 
 ## Examples
